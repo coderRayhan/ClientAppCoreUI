@@ -1,0 +1,13 @@
+<h2 mat-dialog-title *ngIf="title">{{title}}</h2>
+<h2 mat-dialog-title *ngIf="!title">{{'Confirmation'}}</h2>
+<mat-dialog-content>
+<!--  {{'Confirmation' | translate}}-->
+  <p>{{ message }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <!--  <button (click)="confirm(false)">{{'No'}}</button>-->
+  <button class="item-right custom-btn btn-warn me-2" (click)="confirm(false)" size="sm">No</button>
+  <button class="item-right custom-btn color-theme" (click)="confirm(true)" size="sm">Yes</button>
+  <!--    <button (click)="confirm(true)">{{'Yes'}}-->
+</mat-dialog-actions>
+

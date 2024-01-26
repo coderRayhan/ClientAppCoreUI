@@ -1,0 +1,62 @@
+<div class="p-4 w-100">
+    <div class="text-end">
+      <mat-icon (click)="closeDialog()" class="icon-warn action" [matTooltip]="'cancel'">cancel</mat-icon>
+    </div>
+    <div>
+<c-col xs="12">
+    <!-- <c-card class="mb-4">
+      <c-card-header>
+        <strong>Angular Form Control</strong>
+      </c-card-header>
+      <c-card-body> -->
+          <form cForm [formGroup]="frmGroup">
+            <c-row class="mb-3">
+                <c-col lg="4" md="6" xs="12" class="mb-2">
+                  <label cLabel>
+                    {{'Name'}}
+                    <strong class="icon-warn">*</strong>
+                  </label>
+                  <input cFormControl sizing="sm" type="text" formControlName="name"/>
+                  <input cFormControl sizing="sm" type="hidden" formControlName="id"/>
+                </c-col>
+                <c-col lg="4" md="6" xs="12" class="mb-2">
+                  <label cLabel>
+                    {{'Name Bangla'}}
+                    <strong class="icon-warn">*</strong>
+                  </label>
+                  <input cFormControl sizing="sm" type="text" formControlName="nameBN"/>
+                </c-col>
+                <c-col lg="4" md="6" xs="12" class="mb-2">
+                  <label cLabel>
+                    {{'Code'}}
+                  </label>
+                  <input cFormControl sizing="sm" type="text" formControlName="code"/>
+                </c-col>
+
+                <c-col lg="12" md="12" xs="12" class="mb-2">
+                    <label cLabel>
+                      {{'Description'}}
+                    </label>
+                    <input cFormControl sizing="sm" type="text" formControlName="description"/>
+                  </c-col>
+              </c-row>
+              <c-row class="text-end">
+                <c-col xs="12">
+                    <button class="btn_margin" mat-raised-button color="primary" (click)="clearFormData()">Reset</button>
+    <button mat-raised-button color="accent" (click)="onSave()" *ngIf="!isEdit" [disabled]="!frmGroup.valid || isLoading">Save</button>
+    <button mat-raised-button color="accent" (click)="onUpdate()" *ngIf="isEdit" [disabled]="!frmGroup.valid || isLoading">Save</button>
+                  <!-- <button class="custom-btn btn-default me-2 mb-2" (click)="clearFormData()" size="sm">
+                    <svg cIcon name="cil-clear-all"></svg>
+                    {{'reset'}}
+                  </button>
+                  <button class="custom-btn btn-theme" (click)="onSave()" *ngIf="!isEdit" size="sm"
+                          [disabled]="!frmGroup.valid || isLoading">
+                    {{'save'}}
+                  </button> -->
+                </c-col>
+              </c-row>
+          </form>
+      <!-- </c-card-body>
+    </c-card> -->
+  </c-col>
+  </div>
