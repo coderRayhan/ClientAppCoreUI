@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 // Import app component
 import { AppComponent } from './app.component';
 import { httpInterceptorProviders } from './containers/core/interceptors/http.interceptor';
+import { authInterceptorProviders } from 'src/app/containers/core/auth/authorize.interceptor'
 
 // Import containers
 import { DefaultFooterComponent, DefaultHeaderComponent, DefaultLayoutComponent } from './containers';
@@ -81,7 +82,8 @@ const APP_CONTAINERS = [
   providers: [
     IconSetService,
     Title,
-    httpInterceptorProviders
+    httpInterceptorProviders,
+    authInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })

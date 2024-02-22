@@ -1,32 +1,29 @@
-import { Inject, Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthorizeInterceptor implements HttpInterceptor {
-  loginUrl: string;
+const ACCESS_TOKEN = 'access-token';
 
-  constructor(@Inject('BASE_URL') baseUrl: string) {
-    this.loginUrl = `${baseUrl}Identity/Account/Login`;
-  }
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(req).pipe(
-      catchError(error => {
-        if (error instanceof HttpErrorResponse && error.url?.startsWith(this.loginUrl)) {
-          window.location.href = `${this.loginUrl}?ReturnUrl=${window.location.pathname}`;
-        }
-        return throwError(() => error);
-      }),
-      // HACK: As of .NET 8 preview 5, some non-error responses still need to be redirected to login page.
-      map((event: HttpEvent<any>) => {2
-        if (event instanceof HttpResponse && event.url?.startsWith(this.loginUrl)) {
-          window.location.href = `${this.loginUrl}?ReturnUrl=${window.location.pathname}`;
-        }
-        return event;
-      }));
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // Get the access token from your authentication service
+    debugger;
+    const accessToken = window.localStorage.getItem(ACCESS_TOKEN);
+
+    // Clone the request and add the Authorization header
+    const authRequest = request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    // Pass the cloned request to the next handler
+    return next.handle(authRequest);
   }
 }
+
+export const authInterceptorProviders = [
+  {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+]

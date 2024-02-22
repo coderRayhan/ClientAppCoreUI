@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { CreateLookupCommand, GetLookupResponse, LookupsClient, UpdateLookupCommand } from '../../../lms-api-service';
+import { CreateLookupCommand, LookupDto, LookupsClient, UpdateLookupCommand } from '../../../lms-api-service';
 
 @Component({
   selector: 'app-lookup-details',
@@ -16,7 +16,7 @@ export class LookupDetailsComponent implements OnInit {
   updateModel: UpdateLookupCommand;
   isEdit : boolean;
   isLoading : boolean;
-  dataSource : GetLookupResponse[];
+  dataSource : LookupDto[];
   constructor(private dialog : MatDialog,
     private formBuilder : FormBuilder,
     private lookupsClient : LookupsClient,
@@ -61,6 +61,8 @@ export class LookupDetailsComponent implements OnInit {
     this.model.nameBN = this.frmGroup.get('nameBN').value;
     this.model.code = this.frmGroup.get('code').value;
     this.model.description = this.frmGroup.get('description').value;
+    this.model.parentId = ''
+    console.log(this.model)
     this.lookupsClient.createLookup(this.model).subscribe(res => {
       this.dialogRef.close();
     });
@@ -95,7 +97,6 @@ export class LookupDetailsComponent implements OnInit {
 
   edit(): void {
     this.frmGroup.patchValue({
-      id: this.model.id,
       name: this.model.name,
       nameBN: this.model.nameBN,
       code: this.model.code,

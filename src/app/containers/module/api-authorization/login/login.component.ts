@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { StorageService } from '../../../core/service/storage.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoginRequest } from '../../lms/lms-api-service';
+import { LoginCommand } from '../../lms/lms-api-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,17 +12,22 @@ import { LoginRequest } from '../../lms/lms-api-service';
 })
 export class LoginComponent implements OnInit {
   frmGroup : FormGroup;
-  loginRequest : LoginRequest;
-  constructor(private authService: AuthService, private storageService: StorageService){}
+  loginRequest : LoginCommand;
+  authService : AuthService = inject(AuthService);
+  storageService : StorageService = inject(StorageService);
+  router : Router = inject(Router);
+  constructor(){}
   ngOnInit(): void {
     this.setInitValue();
   }
 
   onSubmit(){
-    this.loginRequest = new LoginRequest();
-    this.loginRequest.email = this.frmGroup.get("email")?.value;
+    this.loginRequest = new LoginCommand();
+    this.loginRequest.userName = this.frmGroup.get("email")?.value;
     this.loginRequest.password = this.frmGroup.get("password")?.value;
     this.authService.login(this.loginRequest);
+    const returnUrl = this.authService.returnUrl || '/';
+    this.router.navigateByUrl(returnUrl);
   }
 
   setInitValue(){

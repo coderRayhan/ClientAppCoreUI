@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {AppConstants} from '../../../../../core/constants/app.constants';
-import { GetLookupResponse, LookupsClient } from '../../../lms-api-service';
+import { CreateLookupCommand, LookupsClient, PaginatedListOfLookupDto } from '../../../lms-api-service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { LookupDetailsComponent } from '../lookup-details/lookup-details.component';
@@ -18,7 +18,7 @@ export class LookupListComponent implements OnInit{
   
   /*dataTable*/
   paginationArray: number[] = this.appConstants.DEFAULT_ARRAY;
-  dataSource : MatTableDataSource<GetLookupResponse>;
+  dataSource : MatTableDataSource<PaginatedListOfLookupDto>;
   pageSize: number = this.appConstants.DEFAULT_SIZE;
   pageIndex: number = this.appConstants.DEFAULT_PAGE;
   totalCount: number = 0;
@@ -46,28 +46,29 @@ export class LookupListComponent implements OnInit{
       console.log("Modal closed")
     })
   }
-  onGetCreateOrEdit(isEdit : boolean, model? : GetLookupResponse){
-    model = model ? model : new GetLookupResponse();
+  onGetCreateOrEdit(isEdit : boolean, model? : PaginatedListOfLookupDto){
+    model = model ? model : new CreateLookupCommand();
     this.matDialogConfig.data = {model,isEdit};
     const dialogRef = this.matDialog.open(LookupDetailsComponent, this.matDialogConfig );
     dialogRef.afterClosed().subscribe(() => {
-      this.lookupClient.getAllLookups().subscribe((res) => {
-        this.dataSource = new MatTableDataSource(res);
+      this.lookupClient.getAllLookups(1, 10).subscribe((res) => {
+        console.log(res)
+        this.dataSource = new MatTableDataSource(res.items);
       })
     })
   }
 
-  onDelete(id:number){
-    this.lookupClient.deleteLookup(id).subscribe(res => {
-      this.snackBar.open('Deleted Successfully', 'Ok', {
-        duration: 3000
-      })
-      this.getPageableList();
-    })
-  }
+  // onDelete(id:number){
+  //   this.lookupClient.deleteLookup(id).subscribe(res => {
+  //     this.snackBar.open('Deleted Successfully', 'Ok', {
+  //       duration: 3000
+  //     })
+  //     this.getPageableList();
+  //   })
+  // }
   
   getPageableList(){
-    this.lookupClient.getPaginatedLookups(this.pageIndex, this.pageSize).subscribe((res) => {
+    this.lookupClient.getAllLookups(this.pageIndex, this.pageSize).subscribe((res) => {
       this.dataSource = new MatTableDataSource(res.items);
       this.totalCount = res.totalCount;
   })
